@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 This is the **Help Documents** for MSSP
 
 # 1. Settings
