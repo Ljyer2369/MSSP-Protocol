@@ -1,0 +1,33 @@
+S3N0: 2024/03/05 21:51:09 messageHandle.go:30: S3N0 get sequenceLock locked, now trying to propose...
+S3N0: 2024/03/05 21:51:09 messageHandle.go:37: S3N0 put the request into the pool ...
+S3N0: 2024/03/05 21:51:09 messageHandle.go:96: S3N0 : received the Prepare ...
+S3N0: 2024/03/05 21:51:09 messageHandle.go:153: S3N0 received the Commit from ...1
+S3N0: 2024/03/05 21:51:09 messageHandle.go:96: S3N0 : received the Prepare ...
+S3N0: 2024/03/05 21:51:09 messageHandle.go:127: S3N0 : is going to commit
+S3N0: 2024/03/05 21:51:09 messageHandle.go:141: S3N0 : commit is broadcast
+S3N0: 2024/03/05 21:51:09 messageHandle.go:153: S3N0 received the Commit from ...2
+S3N0: 2024/03/05 21:51:09 messageHandle.go:165: S3N0 : has received 2f + 1 commits ... 
+S3N0: 2024/03/05 21:51:10 pbftInside_module.go:58: S3N0 : adding the block 36...now height = 35 
+S3N0: 2024/03/05 21:51:15 pbftInside_module.go:60: S3N0 : added the block 36... 
+S3N0: 2024/03/05 21:51:15 pbftInside_module.go:65: S3N0 : main node is trying to send relay txs at height = 36 
+S3N0: 2024/03/05 21:51:15 pbftInside_module.go:100: S3N0 : sended relay txs to 0
+S3N0: 2024/03/05 21:51:15 pbftInside_module.go:100: S3N0 : sended relay txs to 1
+S3N0: 2024/03/05 21:51:15 pbftInside_module.go:100: S3N0 : sended relay txs to 2
+S3N0: 2024/03/05 21:51:15 pbftInside_module.go:122: S3N0 : sended excuted txs
+S3N0: 2024/03/05 21:51:15 messageHandle.go:194: S3N0: this round of pbft 36 is end 
+S3N0: 2024/03/05 21:51:15 messageHandle.go:201: S3N0 get sequenceLock unlocked...
+S3N0: 2024/03/05 21:51:15 messageHandle.go:30: S3N0 get sequenceLock locked, now trying to propose...
+S3N0: 2024/03/05 21:51:15 messageHandle.go:37: S3N0 put the request into the pool ...
+S3N0: 2024/03/05 21:51:15 pbftOutside_module.go:51: S3N0 : has handled injected txs msg, txs: 347 
+S3N0: 2024/03/05 21:51:15 pbftOutside_module.go:34: S3N0 : has received relay txs from shard 1, the senderSeq is 36
+S3N0: 2024/03/05 21:51:15 pbftOutside_module.go:39: S3N0 : has handled relay txs msg
+S3N0: 2024/03/05 21:51:15 pbftOutside_module.go:51: S3N0 : has handled injected txs msg, txs: 205 
+S3N0: 2024/03/05 21:51:15 pbftOutside_module.go:34: S3N0 : has received relay txs from shard 2, the senderSeq is 36
+S3N0: 2024/03/05 21:51:15 pbftOutside_module.go:39: S3N0 : has handled relay txs msg
+S3N0: 2024/03/05 21:51:15 pbftOutside_module.go:34: S3N0 : has received relay txs from shard 0, the senderSeq is 36
+S3N0: 2024/03/05 21:51:15 pbftOutside_module.go:39: S3N0 : has handled relay txs msg
+S3N0: 2024/03/05 21:51:15 pbftOutside_module.go:51: S3N0 : has handled injected txs msg, txs: 140 
+S3N0: 2024/03/05 21:51:15 pbftOutside_module.go:51: S3N0 : has handled injected txs msg, txs: 159 
+S3N0: 2024/03/05 21:51:15 pbftOutside_module.go:51: S3N0 : has handled injected txs msg, txs: 305 
+S3N0: 2024/03/05 21:51:15 messageHandle.go:153: S3N0 received the Commit from ...3
+S3N0: 2024/03/05 21:51:15 messageHandle.go:96: S3N0 : received the Prepare ...

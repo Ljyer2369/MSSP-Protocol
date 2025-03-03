@@ -8,21 +8,21 @@ import (
 	"os"
 )
 
-type Broker struct {
+type Broker struct { //
 	BrokerRawMegs  map[string]*message.BrokerRawMeg
 	ChainConfig    *params.ChainConfig
 	BrokerAddress  []string
 	RawTx2BrokerTx map[string][]string
 }
 
-func (b *Broker) NewBroker(pcc *params.ChainConfig) {
+func (b *Broker) NewBroker(pcc *params.ChainConfig) { //NewBroker方法用于创建和配置客户端，参数分别代表节点总数、分片总数和委员会方法
 	b.BrokerRawMegs = make(map[string]*message.BrokerRawMeg)
 	b.RawTx2BrokerTx = make(map[string][]string)
 	b.ChainConfig = pcc
 	b.BrokerAddress = b.initBrokerAddr(params.BrokerNum)
 }
 
-func (b *Broker) IsBroker(address string) bool {
+func (b *Broker) IsBroker(address string) bool { //IsBroker方法用于判断address是否为Broker
 	for _, brokerAddress := range b.BrokerAddress {
 		if brokerAddress == address {
 			return true

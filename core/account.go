@@ -1,5 +1,5 @@
-// Account, AccountState
-// Some basic operation about accountState
+//账户、账户状态
+//关于账户状态的一些基本操作
 
 package core
 
@@ -12,35 +12,35 @@ import (
 	"math/big"
 )
 
-type Account struct {
-	AcAddress utils.Address
-	PublicKey []byte
+type Account struct { //Account结构包含账户的各种信息
+	AcAddress utils.Address //AcAddress：该变量似乎代表账户的地址
+	PublicKey []byte        //PublicKey：该变量似乎代表账户的公钥
 }
 
-// AccoutState record the details of an account, it will be saved in status trie
-type AccountState struct {
-	AcAddress   utils.Address // this part is not useful, abort
-	Nonce       uint64
-	Balance     *big.Int
-	StorageRoot []byte // only for smart contract account
-	CodeHash    []byte // only for smart contract account
+// AccoutState记录帐户的详细信息，它将保存在状态树中
+type AccountState struct { //AccountState结构包含账户状态的各种信息
+	AcAddress   utils.Address //AcAddress：该变量似乎代表账户的地址
+	Nonce       uint64        //Nonce：该变量似乎代表账户的随机数
+	Balance     *big.Int      //Balance：该变量似乎代表账户的余额
+	StorageRoot []byte        //代表账户的存储根，仅适用于智能合约账户
+	CodeHash    []byte        //代表账户的代码哈希，仅适用于智能合约账户
 }
 
-// Reduce the balance of an account
-func (as *AccountState) Deduct(val *big.Int) bool {
+// 减少账户余额
+func (as *AccountState) Deduct(val *big.Int) bool { //Deduct方法用于减少账户余额
 	if as.Balance.Cmp(val) < 0 {
 		return false
-	}
-	as.Balance.Sub(as.Balance, val)
+	} //如果账户余额小于val，则返回false
+	as.Balance.Sub(as.Balance, val) //否则，减少账户余额
 	return true
 }
 
-// Increase the balance of an account
+// 增加账户余额
 func (s *AccountState) Deposit(value *big.Int) {
 	s.Balance.Add(s.Balance, value)
 }
 
-// Encode AccountState in order to store in the MPT
+// 对 AccountState 进行编码以便存储在 MPT 中
 func (as *AccountState) Encode() []byte {
 	var buff bytes.Buffer
 	encoder := gob.NewEncoder(&buff)
@@ -51,7 +51,7 @@ func (as *AccountState) Encode() []byte {
 	return buff.Bytes()
 }
 
-// Decode AccountState
+// 解码帐户状态
 func DecodeAS(b []byte) *AccountState {
 	var as AccountState
 
@@ -63,7 +63,7 @@ func DecodeAS(b []byte) *AccountState {
 	return &as
 }
 
-// Hash AccountState for computing the MPT Root
+// 用于计算 MPT 根的哈希 AccountState
 func (as *AccountState) Hash() []byte {
 	h := sha256.Sum256(as.Encode())
 	return h[:]

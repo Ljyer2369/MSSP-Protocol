@@ -1,5 +1,5 @@
-// Supervisor is an abstract role in this simulator that may read txs, generate partition infos,
-// and handle history data.
+// Supervisor 是这个模拟器中的一个抽象角色，可以读取 txs，生成分区信息，
+//并处理历史数据。它还可以将区块信息发送给领导者，以便领导者可以将其转发给其他节点。
 
 package supervisor
 
@@ -23,39 +23,41 @@ import (
 	"time"
 )
 
-type Supervisor struct {
-	// basic infos
-	IPaddr       string // ip address of this Supervisor
-	ChainConfig  *params.ChainConfig
-	Ip_nodeTable map[uint64]map[uint64]string
+type Supervisor struct { //Supervisor结构包含客户端的各种信息
+	//基本信息
+	//为了Supervisor可以实现全局以及消息通信，需要知道分片区块链网络中各个节点的具体地址系统配置信息，同时作为节点，需要设置相应的TCP端口以及日志信息
+	IPaddr       string                       //主管的 IP 地址
+	ChainConfig  *params.ChainConfig          //链配置
+	Ip_nodeTable map[uint64]map[uint64]string //区块链模拟中节点的 IP 地址映射，IPmap_nodeTable它是一个两级映射，
 
-	// tcp controll
-	listenStop bool
-	tcpLn      net.Listener
-	tcpLock    sync.Mutex
-	// logger module
-	sl *supervisor_log.SupervisorLog
+	// tcp控制
+	listenStop bool         //是否停止监听
+	tcpLn      net.Listener //tcp监听器
+	tcpLock    sync.Mutex   //tcp锁
+	//记录器模块
+	sl *supervisor_log.SupervisorLog //主管日志
 
-	// control components
-	Ss *signal.StopSignal // to control the stop message sending
+	//控制元件
+	Ss *signal.StopSignal //负责全局网络的节点的终止信息分布
 
-	// supervisor and committee components
-	comMod committee.CommitteeModule
+	//委员会模块
+	comMod committee.CommitteeModule //负责设置区块链系统使用的意见协议以及跨分片意见机制，如PBFT、Relay、BrokerChain、CLPA
 
-	// measure components
-	testMeasureMods []measure.MeasureModule
+	//测量模块
+	testMeasureMods []measure.MeasureModule //负责区块测试链的各类性能，如TPS、延迟、跨分片交易率等
 
-	// diy, add more structures or classes here ...
+	//在此处添加更多结构或类
 }
 
 func (d *Supervisor) NewSupervisor(ip string, pcc *params.ChainConfig, committeeMethod string, mearsureModNames ...string) {
-	d.IPaddr = ip
-	d.ChainConfig = pcc
-	d.Ip_nodeTable = params.IPmap_nodeTable
+	//NewSupervisor方法用于创建和配置客户端，参数分别代表节点总数、分片总数和委员会方法
+	d.IPaddr = ip                           //将主管的 IP 地址设置为ip
+	d.ChainConfig = pcc                     //将链配置设置为pcc
+	d.Ip_nodeTable = params.IPmap_nodeTable //将区块链模拟中节点的 IP 地址映射设置为params.IPmap_nodeTable
 
-	d.sl = supervisor_log.NewSupervisorLog()
+	d.sl = supervisor_log.NewSupervisorLog() //创建一个新的主管日志
 
-	d.Ss = signal.NewStopSignal(2 * int(pcc.ShardNums))
+	d.Ss = signal.NewStopSignal(2 * int(pcc.ShardNums)) //创建一个新的停止信号
 
 	switch committeeMethod {
 	case "CLPA_Broker":
@@ -65,14 +67,14 @@ func (d *Supervisor) NewSupervisor(ip string, pcc *params.ChainConfig, committee
 	case "Broker":
 		d.comMod = committee.NewBrokerCommitteeMod(d.Ip_nodeTable, d.Ss, d.sl, params.FileInput, params.TotalDataSize, params.BatchSize)
 	default:
-		d.comMod = committee.NewRelayCommitteeModule(d.Ip_nodeTable, d.Ss, d.sl, params.FileInput, params.TotalDataSize, params.BatchSize)
+		d.comMod = committee.NewRelayCommitteeModule(d.Ip_nodeTable, d.Ss, d.sl, params.FileInput, params.TotalDataSize, params.BatchSize) //创建一个新的委员会模块
 	}
 
-	d.testMeasureMods = make([]measure.MeasureModule, 0)
-	for _, mModName := range mearsureModNames {
+	d.testMeasureMods = make([]measure.MeasureModule, 0) //创建一个新的测量模块
+	for _, mModName := range mearsureModNames {          //遍历mearsureModNames
 		switch mModName {
 		case "TPS_Relay":
-			d.testMeasureMods = append(d.testMeasureMods, measure.NewTestModule_avgTPS_Relay())
+			d.testMeasureMods = append(d.testMeasureMods, measure.NewTestModule_avgTPS_Relay()) //将新的测量模块添加到d.testMeasureMods中
 		case "TPS_Broker":
 			d.testMeasureMods = append(d.testMeasureMods, measure.NewTestModule_avgTPS_Broker())
 		case "TCL_Relay":
@@ -92,88 +94,89 @@ func (d *Supervisor) NewSupervisor(ip string, pcc *params.ChainConfig, committee
 	}
 }
 
-// Supervisor received the block informatino from the leaders, and handle these
-// message to measure the performances.
+// Supervisor收到Leader发来的区块信息，通过处理消息来衡量性能。
 func (d *Supervisor) handleBlockInfos(content []byte) {
-	bim := new(message.BlockInfoMsg)
-	err := json.Unmarshal(content, bim)
+	//handleBlockInfos方法用于处理区块信息，参数content是一个字节切片，表示区块信息
+	bim := new(message.BlockInfoMsg)    //创建一个新的BlockInfoMsg结构，BlockInfoMsg结构包含区块信息消息的各种信息
+	err := json.Unmarshal(content, bim) //将content解码为bim
 	if err != nil {
 		log.Panic()
 	}
 	// StopSignal check
-	if bim.BlockBodyLength == 0 {
-		d.Ss.StopGap_Inc()
+	if bim.BlockBodyLength == 0 { //如果区块体长度为0，则表明该块体没有交易
+		d.Ss.StopGap_Inc() //增加停止间隔
 	} else {
-		d.Ss.StopGap_Reset()
+		d.Ss.StopGap_Reset() //重置停止间隔
 	}
 
-	d.comMod.AdjustByBlockInfos(bim)
+	d.comMod.AdjustByBlockInfos(bim) //根据区块信息调整委员会模块
 
 	// measure update
-	for _, measureMod := range d.testMeasureMods {
-		measureMod.UpdateMeasureRecord(bim)
+	for _, measureMod := range d.testMeasureMods { //遍历d.testMeasureMods
+		measureMod.UpdateMeasureRecord(bim) //更新测量记录
 	}
 	// add codes here ...
 }
 
-// read transactions from dataFile. When the number of data is enough,
-// the Supervisor will do re-partition and send partitionMSG and txs to leaders.
-func (d *Supervisor) SupervisorTxHandling() {
-	d.comMod.TxHandling()
+// 从数据文件中读取交易。当数据量足够的时候，Supervisor 将进行重新分区并将partitionMSG 和txs 发送给领导者。
+func (d *Supervisor) SupervisorTxHandling() { //SupervisorTxHandling方法用于处理交易
+	d.comMod.TxHandling() //委员会模块处理交易
 
 	// TxHandling is end
-	for !d.Ss.GapEnough() { // wait all txs to be handled
-		time.Sleep(time.Second)
+	for !d.Ss.GapEnough() { //等待所有交易被处理，并检查是否满足某个间隙条件 (d.Ss.GapEnough())。如果不满足间隙条件，它将等待一秒 (time.Sleep(time.Second))，然后再次检查。一旦满足间隙条件，就会进行下一步
+		time.Sleep(time.Second) //休眠1秒
 	}
-	// send stop message
-	stopmsg := message.MergeMessage(message.CStop, []byte("this is a stop message~"))
-	d.sl.Slog.Println("Supervisor: now sending cstop message to all nodes")
-	for sid := uint64(0); sid < d.ChainConfig.ShardNums; sid++ {
-		for nid := uint64(0); nid < d.ChainConfig.Nodes_perShard; nid++ {
-			networks.TcpDial(stopmsg, d.Ip_nodeTable[sid][nid])
+	// 向所有节点发送停止消息
+	stopmsg := message.MergeMessage(message.CStop, []byte("this is a stop message~")) // 通过将消息类型 (message.CStop) 与包含停止消息描述的字节片合并来准备停止消息 (stopmsg)，然后将其发送到所有节点
+	d.sl.Slog.Println("Supervisor: now sending cstop message to all nodes")           //打印日志
+	for sid := uint64(0); sid < d.ChainConfig.ShardNums; sid++ {                      //遍历分片
+		for nid := uint64(0); nid < d.ChainConfig.Nodes_perShard; nid++ { //遍历节点
+			networks.TcpDial(stopmsg, d.Ip_nodeTable[sid][nid]) //通过TCP连接发送stopmsg消息
 		}
 	}
-	d.sl.Slog.Println("Supervisor: now Closing")
-	d.listenStop = true
-	d.CloseSupervisor()
+	d.sl.Slog.Println("Supervisor: now Closing") //打印日志
+	d.listenStop = true                          //设置listenStop为true，表明客户端应该停止侦听或处理进一步的消息
+	d.CloseSupervisor()                          //关闭客户端
 }
 
-// handle message. only one message to be handled now
-func (d *Supervisor) handleMessage(msg []byte) {
-	msgType, content := message.SplitMessage(msg)
-	switch msgType {
-	case message.CBlockInfo:
+//上面的函数用于管理事务的处理，等待满足特定条件，向所有节点发送停止消息，并为 Supervisor 启动关闭过程。
+
+// 处理传入的消息。
+func (d *Supervisor) handleMessage(msg []byte) { //handleMessage方法用于处理消息，msg表示传入消息的字节片
+	msgType, content := message.SplitMessage(msg) //将消息拆分为消息类型和内容
+	switch msgType {                              //根据消息类型进行不同处理
+	case message.CBlockInfo: //如果消息类型为CBlockInfo，则调用d.handleBlockInfos(content)，这用于处理块信息消息
 		d.handleBlockInfos(content)
 		// add codes for more functionality
-	default:
+	default: //否则，调用d.comMod.HandleOtherMessage(msg)，以使用委员会模块处理消息。然后，遍历d.testMeasureMods，调用mm.HandleExtraMessage(msg)以处理额外消息，这是处理非块信息的不同类型消息的通用机制。
 		d.comMod.HandleOtherMessage(msg)
-		for _, mm := range d.testMeasureMods {
-			mm.HandleExtraMessage(msg)
+		for _, mm := range d.testMeasureMods { //遍历d.testMeasureMods
+			mm.HandleExtraMessage(msg) //处理额外消息
 		}
 	}
 }
 
-func (d *Supervisor) handleClientRequest(con net.Conn) {
-	defer con.Close()
-	clientReader := bufio.NewReader(con)
+func (d *Supervisor) handleClientRequest(con net.Conn) { //handleClientRequest方法用于处理客户端请求，con表示客户端连接
+	defer con.Close()                    //延迟关闭连接
+	clientReader := bufio.NewReader(con) //创建一个新的缓冲读取器
 	for {
-		clientRequest, err := clientReader.ReadBytes('\n')
+		clientRequest, err := clientReader.ReadBytes('\n') //读取客户端请求
 		switch err {
-		case nil:
+		case nil: //如果没有错误，则调用d.handleMessage(clientRequest)以处理消息
 			d.tcpLock.Lock()
 			d.handleMessage(clientRequest)
 			d.tcpLock.Unlock()
-		case io.EOF:
+		case io.EOF: //如果发生EOF错误，则打印日志，然后返回
 			log.Println("client closed the connection by terminating the process")
 			return
-		default:
+		default: //否则，打印错误日志，然后返回
 			log.Printf("error: %v\n", err)
 			return
 		}
 	}
 }
 
-func (d *Supervisor) TcpListen() {
+func (d *Supervisor) TcpListen() { //TcpListen方法用于监听TCP连接
 	ln, err := net.Listen("tcp", d.IPaddr)
 	if err != nil {
 		log.Panic(err)
@@ -189,7 +192,7 @@ func (d *Supervisor) TcpListen() {
 }
 
 // tcp listen for Supervisor
-func (d *Supervisor) OldTcpListen() {
+func (d *Supervisor) OldTcpListen() { //OldTcpListen方法用于监听TCP连接
 	ipaddr, err := net.ResolveTCPAddr("tcp", d.IPaddr)
 	if err != nil {
 		log.Panic(err)
@@ -219,8 +222,8 @@ func (d *Supervisor) OldTcpListen() {
 	}
 }
 
-// close Supervisor, and record the data in .csv file
-func (d *Supervisor) CloseSupervisor() {
+// 关闭Supervisor，并将数据记录在.csv文件中
+func (d *Supervisor) CloseSupervisor() { //CloseSupervisor方法用于关闭客户端
 	d.sl.Slog.Println("Closing...")
 	for _, measureMod := range d.testMeasureMods {
 		d.sl.Slog.Println(measureMod.OutputMetricName())

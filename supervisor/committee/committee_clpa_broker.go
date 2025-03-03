@@ -22,7 +22,7 @@ import (
 )
 
 // CLPA committee operations
-type CLPACommitteeMod_Broker struct {
+type CLPACommitteeMod_Broker struct { //CLPACommitteeMod_Broker结构包含 CLPA 委员会模块的各种信息
 	csvPath      string
 	dataTotalNum int
 	nowDataNum   int

@@ -7,14 +7,14 @@ import (
 	"log"
 )
 
-// This module used in the blockChain using Broker mechanism.
-// "CLPA" means that the blockChain use Account State Transfer protocal by clpa.
+// 该模块在区块链中使用，采用Broker机制。
+// “CLPA”表示区块链使用 clpa 的账户状态传输协议。
 type CLPABrokerOutsideModule struct {
 	cdm      *dataSupport.Data_supportCLPA
 	pbftNode *PbftConsensusNode
 }
 
-func (cbom *CLPABrokerOutsideModule) HandleMessageOutsidePBFT(msgType message.MessageType, content []byte) bool {
+func (cbom *CLPABrokerOutsideModule) HandleMessageOutsidePBFT(msgType message.MessageType, content []byte) bool { //HandleMessageOutsidePBFT方法用于处理来自外部的消息
 	switch msgType {
 	case message.CSeqIDinfo:
 		cbom.handleSeqIDinfos(content)
@@ -34,7 +34,7 @@ func (cbom *CLPABrokerOutsideModule) HandleMessageOutsidePBFT(msgType message.Me
 }
 
 // receive SeqIDinfo
-func (cbom *CLPABrokerOutsideModule) handleSeqIDinfos(content []byte) {
+func (cbom *CLPABrokerOutsideModule) handleSeqIDinfos(content []byte) { //handleSeqIDinfos方法用于接收SeqIDinfo
 	sii := new(message.SeqIDinfo)
 	err := json.Unmarshal(content, sii)
 	if err != nil {
@@ -47,7 +47,7 @@ func (cbom *CLPABrokerOutsideModule) handleSeqIDinfos(content []byte) {
 	cbom.pbftNode.pl.Plog.Printf("S%dN%d : has handled SeqIDinfo msg\n", cbom.pbftNode.ShardID, cbom.pbftNode.NodeID)
 }
 
-func (cbom *CLPABrokerOutsideModule) handleInjectTx(content []byte) {
+func (cbom *CLPABrokerOutsideModule) handleInjectTx(content []byte) { //handleInjectTx方法用于处理注入的交易
 	it := new(message.InjectTxs)
 	err := json.Unmarshal(content, it)
 	if err != nil {
@@ -59,8 +59,8 @@ func (cbom *CLPABrokerOutsideModule) handleInjectTx(content []byte) {
 
 // the leader received the partition message from listener/decider,
 // it init the local variant and send the accout message to other leaders.
-func (cbom *CLPABrokerOutsideModule) handlePartitionMsg(content []byte) {
-	pm := new(message.PartitionModifiedMap)
+func (cbom *CLPABrokerOutsideModule) handlePartitionMsg(content []byte) { //handlePartitionMsg方法用于处理分区消息
+	pm := new(message.PartitionModifiedMap) //创建一个新的PartitionModifiedMap
 	err := json.Unmarshal(content, pm)
 	if err != nil {
 		log.Panic()
@@ -71,7 +71,7 @@ func (cbom *CLPABrokerOutsideModule) handlePartitionMsg(content []byte) {
 }
 
 // wait for other shards' last rounds are over
-func (cbom *CLPABrokerOutsideModule) handlePartitionReady(content []byte) {
+func (cbom *CLPABrokerOutsideModule) handlePartitionReady(content []byte) { //handlePartitionReady方法用于处理分区就绪消息
 	pr := new(message.PartitionReady)
 	err := json.Unmarshal(content, pr)
 	if err != nil {
@@ -89,7 +89,7 @@ func (cbom *CLPABrokerOutsideModule) handlePartitionReady(content []byte) {
 }
 
 // when the message from other shard arriving, it should be added into the message pool
-func (cbom *CLPABrokerOutsideModule) handleAccountStateAndTxMsg(content []byte) {
+func (cbom *CLPABrokerOutsideModule) handleAccountStateAndTxMsg(content []byte) { //handleAccountStateAndTxMsg方法用于处理账户状态和交易消息
 	at := new(message.AccountStateAndTx)
 	err := json.Unmarshal(content, at)
 	if err != nil {
@@ -98,7 +98,7 @@ func (cbom *CLPABrokerOutsideModule) handleAccountStateAndTxMsg(content []byte) 
 	cbom.cdm.AccountStateTx[at.FromShard] = at
 	cbom.pbftNode.pl.Plog.Printf("S%dN%d has added the accoutStateandTx from %d to pool\n", cbom.pbftNode.ShardID, cbom.pbftNode.NodeID, at.FromShard)
 
-	if len(cbom.cdm.AccountStateTx) == int(cbom.pbftNode.pbftChainConfig.ShardNums)-1 {
+	if len(cbom.cdm.AccountStateTx) == int(cbom.pbftNode.pbftChainConfig.ShardNums)-1 { //如果收到的账户状态和交易消息的数目等于分片数目减一，则将CollectOver设置为true
 		cbom.cdm.CollectLock.Lock()
 		cbom.cdm.CollectOver = true
 		cbom.cdm.CollectLock.Unlock()

@@ -6,8 +6,8 @@ import (
 	"log"
 )
 
-// This module used in the blockChain using transaction relaying mechanism.
-// "Raw" means that the pbft only make block consensus.
+// 该模块在区块链中使用，使用交易中继机制。
+// “Raw”表示pbft仅达成区块共识。
 type RawBrokerOutsideModule struct {
 	pbftNode *PbftConsensusNode
 }

@@ -1,6 +1,5 @@
-// account transfer happens when the leader received the re-partition message.
-// leaders send the infos about the accounts to be transferred to other leaders, and
-// handle them.
+// 当leader收到重新分区消息时发生账户转移。
+// 领导者将转账账户的信息发送给其他领导者，并进行处理。
 
 package pbft_all
 
@@ -14,7 +13,7 @@ import (
 	"time"
 )
 
-// this message used in propose stage, so it will be invoked by InsidePBFT_Module
+// 该消息在提议阶段使用，因此将由 InsidePBFT_Module 调用
 func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) sendPartitionReady() {
 	cphm.cdm.P_ReadyLock.Lock()
 	cphm.cdm.PartitionReady[cphm.pbftNode.ShardID] = true
@@ -29,7 +28,7 @@ func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) sendPartitionReady() {
 		log.Panic()
 	}
 	send_msg := message.MergeMessage(message.CPartitionReady, pByte)
-	for sid := 0; sid < int(cphm.pbftNode.pbftChainConfig.ShardNums); sid++ {
+	for sid := 0; sid < int(cphm.pbftNode.pbftChainConfig.ShardNums); sid++ { //迭代所有分片（由 sid 表示），并使用名为 Networks.TcpDial 的函数或库将 send_msg 发送到除当前分片之外的其他分片。此步骤通知其他分片当前分片已准备好进行分区。
 		if sid != int(pr.FromShard) {
 			networks.TcpDial(send_msg, cphm.pbftNode.ip_nodeTable[uint64(sid)][0])
 		}
@@ -37,7 +36,7 @@ func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) sendPartitionReady() {
 	cphm.pbftNode.pl.Plog.Print("Ready for partition\n")
 }
 
-// get whether all shards is ready, it will be invoked by InsidePBFT_Module
+// 获取所有分片是否准备就绪，将由 InsidePBFT_Module 调用
 func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) getPartitionReady() bool {
 	cphm.cdm.P_ReadyLock.Lock()
 	defer cphm.cdm.P_ReadyLock.Unlock()
@@ -55,7 +54,7 @@ func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) getPartitionReady() bool {
 	return len(cphm.cdm.PartitionReady) == int(cphm.pbftNode.pbftChainConfig.ShardNums) && flag
 }
 
-// send the transactions and the accountState to other leaders
+// 将交易和 accountState 发送给其他领导者
 func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) sendAccounts_and_Txs() {
 	// generate accout transfer and txs message
 	accountToFetch := make([]string, 0)
@@ -83,7 +82,7 @@ func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) sendAccounts_and_Txs() {
 				asSend = append(asSend, asFetched[idx])
 			}
 		}
-		// fetch transactions to it, after the transactions is fetched, delete it in the pool
+		// 向其中获取交易，获取交易后，将其从池中删除
 		txSend := make([]*core.Transaction, 0)
 		firstPtr := 0
 		for secondPtr := 0; secondPtr < len(cphm.pbftNode.CurChain.Txpool.TxQueue); secondPtr++ {
@@ -197,7 +196,7 @@ func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) proposePartition() (bool, *m
 	return true, r
 }
 
-// all nodes in a shard will do accout Transfer, to sync the state trie
+// 分片中的所有节点都会进行账户传输，以同步状态树
 func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) accountTransfer_do(atm *message.AccountTransferMsg) {
 	// change the partition Map
 	cnt := 0

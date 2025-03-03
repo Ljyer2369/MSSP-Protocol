@@ -1,0 +1,18 @@
+S3N3: 2024/03/05 21:51:09 pbftInside_module.go:41: S3N3 : the pre-prepare message is correct, putting it into the RequestPool. 
+S3N3: 2024/03/05 21:51:09 messageHandle.go:91: S3N3 : has broadcast the prepare message 
+S3N3: 2024/03/05 21:51:09 messageHandle.go:153: S3N3 received the Commit from ...1
+S3N3: 2024/03/05 21:51:09 messageHandle.go:153: S3N3 received the Commit from ...0
+S3N3: 2024/03/05 21:51:09 messageHandle.go:165: S3N3 : has received 2f + 1 commits ... 
+S3N3: 2024/03/05 21:51:09 pbftInside_module.go:58: S3N3 : adding the block 36...now height = 35 
+S3N3: 2024/03/05 21:51:15 pbftInside_module.go:60: S3N3 : added the block 36... 
+S3N3: 2024/03/05 21:51:15 messageHandle.go:194: S3N3: this round of pbft 36 is end 
+S3N3: 2024/03/05 21:51:15 messageHandle.go:96: S3N3 : received the Prepare ...
+S3N3: 2024/03/05 21:51:15 messageHandle.go:127: S3N3 : is going to commit
+S3N3: 2024/03/05 21:51:15 messageHandle.go:141: S3N3 : commit is broadcast
+S3N3: 2024/03/05 21:51:15 messageHandle.go:153: S3N3 received the Commit from ...2
+S3N3: 2024/03/05 21:51:15 pbftInside_module.go:41: S3N3 : the pre-prepare message is correct, putting it into the RequestPool. 
+S3N3: 2024/03/05 21:51:15 messageHandle.go:91: S3N3 : has broadcast the prepare message 
+S3N3: 2024/03/05 21:51:16 messageHandle.go:96: S3N3 : received the Prepare ...
+S3N3: 2024/03/05 21:51:16 messageHandle.go:127: S3N3 : is going to commit
+S3N3: 2024/03/05 21:51:16 messageHandle.go:141: S3N3 : commit is broadcast
+S3N3: 2024/03/05 21:51:16 messageHandle.go:153: S3N3 received the Commit from ...1

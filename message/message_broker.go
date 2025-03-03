@@ -46,7 +46,7 @@ type BrokerType2Meg struct {
 	Broker utils.Address // replace signature of broker
 }
 
-type Mag2Confirm struct {
+type Mag2Confirm struct { //Mag2Confirm结构包含第二种经纪人确认消息的各种信息
 	//RawDigest string
 	Tx2Hash []byte
 	RawMeg  *BrokerRawMeg

@@ -19,7 +19,7 @@ import (
 )
 
 // CLPA committee operations
-type CLPACommitteeModule struct {
+type CLPACommitteeModule struct { //CLPACommitteeModule结构包含 CLPA 委员会模块的各种信息
 	csvPath      string
 	dataTotalNum int
 	nowDataNum   int
@@ -40,7 +40,7 @@ type CLPACommitteeModule struct {
 	IpNodeTable map[uint64]map[uint64]string
 }
 
-func NewCLPACommitteeModule(Ip_nodeTable map[uint64]map[uint64]string, Ss *signal.StopSignal, sl *supervisor_log.SupervisorLog, csvFilePath string, dataNum, batchNum, clpaFrequency int) *CLPACommitteeModule {
+func NewCLPACommitteeModule(Ip_nodeTable map[uint64]map[uint64]string, Ss *signal.StopSignal, sl *supervisor_log.SupervisorLog, csvFilePath string, dataNum, batchNum, clpaFrequency int) *CLPACommitteeModule { //NewCLPACommitteeModule方法用于创建和配置 CLPA 委员会模块，参数分别代表节点总数、分片总数、委员会方法、委员会模块的日志、csv文件路径、数据总数、批次中的数据记录数、CLPA算法的频率
 	cg := new(partition.CLPAState)
 	cg.Init_CLPAState(0.5, 100, params.ShardNum)
 	return &CLPACommitteeModule{
@@ -60,7 +60,7 @@ func NewCLPACommitteeModule(Ip_nodeTable map[uint64]map[uint64]string, Ss *signa
 
 func (ccm *CLPACommitteeModule) HandleOtherMessage([]byte) {}
 
-func (ccm *CLPACommitteeModule) fetchModifiedMap(key string) uint64 {
+func (ccm *CLPACommitteeModule) fetchModifiedMap(key string) uint64 { //fetchModifiedMap方法用于获取给定地址的分片 ID，如果该地址不在修改的映射中，则返回其分片 ID
 	if val, ok := ccm.modifiedMap[key]; !ok {
 		return uint64(utils.Addr2Shard(key))
 	} else {
@@ -68,7 +68,7 @@ func (ccm *CLPACommitteeModule) fetchModifiedMap(key string) uint64 {
 	}
 }
 
-func (ccm *CLPACommitteeModule) txSending(txlist []*core.Transaction) {
+func (ccm *CLPACommitteeModule) txSending(txlist []*core.Transaction) { //txSending方法用于将给定的交易列表发送到相应的分片
 	// the txs will be sent
 	sendToShard := make(map[uint64][]*core.Transaction)
 
@@ -99,7 +99,7 @@ func (ccm *CLPACommitteeModule) txSending(txlist []*core.Transaction) {
 	}
 }
 
-func (ccm *CLPACommitteeModule) TxHandling() {
+func (ccm *CLPACommitteeModule) TxHandling() { //TxHandling()方法用于处理交易
 	txfile, err := os.Open(ccm.csvPath)
 	if err != nil {
 		log.Panic(err)
@@ -124,9 +124,9 @@ func (ccm *CLPACommitteeModule) TxHandling() {
 		}
 
 		// batch sending condition
-		if len(txlist) == int(ccm.batchDataNum) || ccm.nowDataNum == ccm.dataTotalNum {
+		if len(txlist) == int(ccm.batchDataNum) || ccm.nowDataNum == ccm.dataTotalNum { //
 			// set the algorithm timer begins
-			if ccm.clpaLastRunningTime.IsZero() {
+			if ccm.clpaLastRunningTime.IsZero() { //
 				ccm.clpaLastRunningTime = time.Now()
 			}
 			ccm.txSending(txlist)
@@ -136,7 +136,7 @@ func (ccm *CLPACommitteeModule) TxHandling() {
 			ccm.Ss.StopGap_Reset()
 		}
 
-		if !ccm.clpaLastRunningTime.IsZero() && time.Since(ccm.clpaLastRunningTime) >= time.Duration(ccm.clpaFreq)*time.Second {
+		if !ccm.clpaLastRunningTime.IsZero() && time.Since(ccm.clpaLastRunningTime) >= time.Duration(ccm.clpaFreq)*time.Second { //
 			ccm.clpaLock.Lock()
 			mmap, _ := ccm.clpaGraph.CLPA_Partition()
 			ccm.clpaMapSend(mmap)
@@ -172,7 +172,7 @@ func (ccm *CLPACommitteeModule) TxHandling() {
 	}
 }
 
-func (ccm *CLPACommitteeModule) clpaMapSend(m map[string]uint64) {
+func (ccm *CLPACommitteeModule) clpaMapSend(m map[string]uint64) { //clpaMapSend方法用于发送给定的修改映射
 	// send partition modified Map message
 	pm := message.PartitionModifiedMap{
 		PartitionModified: m,
@@ -189,7 +189,7 @@ func (ccm *CLPACommitteeModule) clpaMapSend(m map[string]uint64) {
 	ccm.sl.Slog.Println("Supervisor: all partition map message has been sent. ")
 }
 
-func (ccm *CLPACommitteeModule) clpaReset() {
+func (ccm *CLPACommitteeModule) clpaReset() { //clpaReset方法用于重置委员会模块
 	ccm.clpaGraph = new(partition.CLPAState)
 	ccm.clpaGraph.Init_CLPAState(0.5, 100, params.ShardNum)
 	for key, val := range ccm.modifiedMap {

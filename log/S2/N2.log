@@ -1,0 +1,25 @@
+S2N2: 2024/03/05 21:51:09 pbftInside_module.go:41: S2N2 : the pre-prepare message is correct, putting it into the RequestPool. 
+S2N2: 2024/03/05 21:51:09 messageHandle.go:91: S2N2 : has broadcast the prepare message 
+S2N2: 2024/03/05 21:51:09 messageHandle.go:96: S2N2 : received the Prepare ...
+S2N2: 2024/03/05 21:51:09 messageHandle.go:127: S2N2 : is going to commit
+S2N2: 2024/03/05 21:51:09 messageHandle.go:141: S2N2 : commit is broadcast
+S2N2: 2024/03/05 21:51:09 messageHandle.go:153: S2N2 received the Commit from ...0
+S2N2: 2024/03/05 21:51:09 messageHandle.go:153: S2N2 received the Commit from ...3
+S2N2: 2024/03/05 21:51:09 messageHandle.go:165: S2N2 : has received 2f + 1 commits ... 
+S2N2: 2024/03/05 21:51:09 pbftInside_module.go:58: S2N2 : adding the block 36...now height = 35 
+S2N2: 2024/03/05 21:51:14 pbftInside_module.go:60: S2N2 : added the block 36... 
+S2N2: 2024/03/05 21:51:14 messageHandle.go:194: S2N2: this round of pbft 36 is end 
+S2N2: 2024/03/05 21:51:14 messageHandle.go:153: S2N2 received the Commit from ...1
+S2N2: 2024/03/05 21:51:14 pbftInside_module.go:41: S2N2 : the pre-prepare message is correct, putting it into the RequestPool. 
+S2N2: 2024/03/05 21:51:14 messageHandle.go:91: S2N2 : has broadcast the prepare message 
+S2N2: 2024/03/05 21:51:14 messageHandle.go:96: S2N2 : received the Prepare ...
+S2N2: 2024/03/05 21:51:14 messageHandle.go:127: S2N2 : is going to commit
+S2N2: 2024/03/05 21:51:14 messageHandle.go:141: S2N2 : commit is broadcast
+S2N2: 2024/03/05 21:51:14 messageHandle.go:153: S2N2 received the Commit from ...3
+S2N2: 2024/03/05 21:51:14 messageHandle.go:153: S2N2 received the Commit from ...0
+S2N2: 2024/03/05 21:51:14 messageHandle.go:165: S2N2 : has received 2f + 1 commits ... 
+S2N2: 2024/03/05 21:51:14 pbftInside_module.go:58: S2N2 : adding the block 37...now height = 36 
+S2N2: 2024/03/05 21:51:18 pbftInside_module.go:60: S2N2 : added the block 37... 
+S2N2: 2024/03/05 21:51:18 messageHandle.go:194: S2N2: this round of pbft 37 is end 
+S2N2: 2024/03/05 21:51:18 messageHandle.go:96: S2N2 : received the Prepare ...
+S2N2: 2024/03/05 21:51:18 messageHandle.go:153: S2N2 received the Commit from ...1

@@ -1,0 +1,44 @@
+=============== Mar 2, 2024 (CST) ===============
+09:20:19.259413 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+09:20:19.372493 db@open opening
+09:20:19.373521 version@stat F·[] S·0B[] Sc·[]
+09:20:19.422679 db@janitor F·2 G·0
+09:20:19.422679 db@open done T·50.1863ms
+09:21:22.283007 memdb@flush N·23412 S·3MiB
+09:21:23.224773 memdb@flush created L0@3 N·23412 S·3MiB "\x00\x06\xdd..\x04\xef6,v8113":"\xff\xfe\x93..C\xb8\x96,v18234"
+09:21:23.225282 version@stat F·[1] S·3MiB[3MiB] Sc·[0.25]
+09:21:23.617589 memdb@flush committed F·1 T·1.3345821s
+09:21:23.618127 journal@remove removed @1
+09:22:03.255403 memdb@flush N·23810 S·3MiB
+09:22:04.230743 memdb@flush created L0@5 N·23810 S·3MiB "\x00\x00\x10..g\xcc(,v44439":"\xff\xfa\x85..\xf5\x0eC,v26178"
+09:22:04.290012 version@stat F·[2] S·6MiB[6MiB] Sc·[0.50]
+09:22:04.763541 memdb@flush committed F·1 T·1.5081384s
+09:22:04.765883 journal@remove removed @2
+=============== Mar 5, 2024 (CST) ===============
+15:22:10.354376 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+15:22:10.711018 version@stat F·[2] S·6MiB[6MiB] Sc·[0.50]
+15:22:10.711018 db@open opening
+15:22:10.713995 journal@recovery F·1
+15:22:10.714987 journal@recovery recovering @4
+15:22:15.612479 memdb@flush created L0@6 N·23649 S·3MiB "\x00\x01\x03..\x0fg\xb0,v47323":"\xff\xfe\xbb..\xb1\xf6},v65193"
+15:22:15.663549 version@stat F·[3] S·9MiB[9MiB] Sc·[0.75]
+15:22:17.470837 db@janitor F·5 G·0
+15:22:17.470837 db@open done T·6.7598184s
+=============== Mar 5, 2024 (CST) ===============
+15:36:43.292517 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+15:36:43.303330 version@stat F·[3] S·9MiB[9MiB] Sc·[0.75]
+15:36:43.303851 db@open opening
+15:36:43.303851 journal@recovery F·1
+15:36:43.308979 journal@recovery recovering @7
+15:36:43.315955 version@stat F·[3] S·9MiB[9MiB] Sc·[0.75]
+15:36:43.419737 db@janitor F·5 G·0
+15:36:43.419737 db@open done T·115.8861ms
+=============== Mar 5, 2024 (CST) ===============
+21:50:58.077127 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+21:50:58.215252 version@stat F·[3] S·9MiB[9MiB] Sc·[0.75]
+21:50:58.215252 db@open opening
+21:50:58.215252 journal@recovery F·1
+21:50:58.216294 journal@recovery recovering @9
+21:50:58.495000 version@stat F·[3] S·9MiB[9MiB] Sc·[0.75]
+21:51:00.646427 db@janitor F·5 G·0
+21:51:00.646427 db@open done T·2.4311746s

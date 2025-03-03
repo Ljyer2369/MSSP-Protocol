@@ -9,9 +9,11 @@ import (
 	"runtime"
 )
 
+//主要就是生成批处理文件，用于启动所有节点
+
 var absolute_path = getABpath()
 
-func getABpath() string {
+func getABpath() string { //getABpath()函数检索包含调用它的Go源文件的目录的绝对路径。
 	var abPath string
 	_, filename, _, ok := runtime.Caller(1)
 	if ok {
@@ -20,7 +22,7 @@ func getABpath() string {
 	return abPath
 }
 
-func GenerateBatFile(nodenum, shardnum, modID int) {
+func GenerateBatFile(nodenum, shardnum, modID int) { //该函数生成一个批处理文件（batrun_showAll.bat），用于启动所有节点
 	ofile, err := os.OpenFile("batrun_showAll.bat", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0777)
 	if err != nil {
 		log.Panic(err)
@@ -41,7 +43,7 @@ func GenerateBatFile(nodenum, shardnum, modID int) {
 	}
 }
 
-func GenerateVBSFile() {
+func GenerateVBSFile() { //该函数生成一个VBS脚本文件( batrun_HideWorker.vbs)。它使用 Windows Script Host (WSH) 来运行 Go 程序，而不显示命令提示符窗口。
 	ofile, err := os.OpenFile("batrun_HideWorker.vbs", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0777)
 	if err != nil {
 		log.Panic(err)

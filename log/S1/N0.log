@@ -1,0 +1,31 @@
+S1N0: 2024/03/05 21:51:09 messageHandle.go:30: S1N0 get sequenceLock locked, now trying to propose...
+S1N0: 2024/03/05 21:51:09 messageHandle.go:37: S1N0 put the request into the pool ...
+S1N0: 2024/03/05 21:51:09 messageHandle.go:96: S1N0 : received the Prepare ...
+S1N0: 2024/03/05 21:51:09 messageHandle.go:153: S1N0 received the Commit from ...1
+S1N0: 2024/03/05 21:51:09 messageHandle.go:96: S1N0 : received the Prepare ...
+S1N0: 2024/03/05 21:51:09 messageHandle.go:127: S1N0 : is going to commit
+S1N0: 2024/03/05 21:51:09 messageHandle.go:141: S1N0 : commit is broadcast
+S1N0: 2024/03/05 21:51:09 messageHandle.go:153: S1N0 received the Commit from ...3
+S1N0: 2024/03/05 21:51:09 messageHandle.go:165: S1N0 : has received 2f + 1 commits ... 
+S1N0: 2024/03/05 21:51:09 pbftInside_module.go:58: S1N0 : adding the block 36...now height = 35 
+S1N0: 2024/03/05 21:51:13 pbftInside_module.go:60: S1N0 : added the block 36... 
+S1N0: 2024/03/05 21:51:13 pbftInside_module.go:65: S1N0 : main node is trying to send relay txs at height = 36 
+S1N0: 2024/03/05 21:51:13 pbftInside_module.go:100: S1N0 : sended relay txs to 0
+S1N0: 2024/03/05 21:51:13 pbftInside_module.go:100: S1N0 : sended relay txs to 2
+S1N0: 2024/03/05 21:51:13 pbftInside_module.go:100: S1N0 : sended relay txs to 3
+S1N0: 2024/03/05 21:51:13 pbftInside_module.go:122: S1N0 : sended excuted txs
+S1N0: 2024/03/05 21:51:13 messageHandle.go:194: S1N0: this round of pbft 36 is end 
+S1N0: 2024/03/05 21:51:13 messageHandle.go:201: S1N0 get sequenceLock unlocked...
+S1N0: 2024/03/05 21:51:13 messageHandle.go:153: S1N0 received the Commit from ...2
+S1N0: 2024/03/05 21:51:13 pbftOutside_module.go:51: S1N0 : has handled injected txs msg, txs: 291 
+S1N0: 2024/03/05 21:51:13 pbftOutside_module.go:51: S1N0 : has handled injected txs msg, txs: 196 
+S1N0: 2024/03/05 21:51:13 pbftOutside_module.go:51: S1N0 : has handled injected txs msg, txs: 1392 
+S1N0: 2024/03/05 21:51:14 messageHandle.go:30: S1N0 get sequenceLock locked, now trying to propose...
+S1N0: 2024/03/05 21:51:14 pbftOutside_module.go:34: S1N0 : has received relay txs from shard 2, the senderSeq is 36
+S1N0: 2024/03/05 21:51:14 pbftOutside_module.go:39: S1N0 : has handled relay txs msg
+S1N0: 2024/03/05 21:51:14 pbftOutside_module.go:51: S1N0 : has handled injected txs msg, txs: 884 
+S1N0: 2024/03/05 21:51:15 pbftOutside_module.go:51: S1N0 : has handled injected txs msg, txs: 249 
+S1N0: 2024/03/05 21:51:15 pbftOutside_module.go:34: S1N0 : has received relay txs from shard 0, the senderSeq is 36
+S1N0: 2024/03/05 21:51:15 pbftOutside_module.go:39: S1N0 : has handled relay txs msg
+S1N0: 2024/03/05 21:51:15 pbftOutside_module.go:34: S1N0 : has received relay txs from shard 3, the senderSeq is 36
+S1N0: 2024/03/05 21:51:15 pbftOutside_module.go:39: S1N0 : has handled relay txs msg

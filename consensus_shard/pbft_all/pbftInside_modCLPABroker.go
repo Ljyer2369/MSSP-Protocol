@@ -13,14 +13,14 @@ import (
 	"time"
 )
 
-type CLPAPbftInsideExtraHandleMod_forBroker struct {
-	cdm      *dataSupport.Data_supportCLPA
-	pbftNode *PbftConsensusNode
+type CLPAPbftInsideExtraHandleMod_forBroker struct { //CLPAPbftInsideExtraHandleMod_forBroker结构包含用于PBFT共识的各种配置参数
+	cdm      *dataSupport.Data_supportCLPA //cdm是一个指向Data_supportCLPA结构的指针，其中包含用于PBFT共识的各种配置参数
+	pbftNode *PbftConsensusNode            //pbftNode是一个指向PbftConsensusNode结构的指针，其中包含用于PBFT共识的各种配置参数
 }
 
-// propose request with different types
-func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) HandleinPropose() (bool, *message.Request) {
-	if cphm.cdm.PartitionOn {
+// 提出不同类型的请求
+func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) HandleinPropose() (bool, *message.Request) { //HandleinPropose方法用于提出不同类型的请求
+	if cphm.cdm.PartitionOn { //如果当前分片已经分区，则执行以下操作
 		cphm.sendPartitionReady()
 		for !cphm.getPartitionReady() {
 			time.Sleep(time.Second)
@@ -46,7 +46,7 @@ func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) HandleinPropose() (bool, *me
 }
 
 // the diy operation in preprepare
-func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) HandleinPrePrepare(ppmsg *message.PrePrepare) bool {
+func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) HandleinPrePrepare(ppmsg *message.PrePrepare) bool { //HandleinPrePrepare方法用于在preprepare中执行diy操作
 	// judge whether it is a partitionRequest or not
 	isPartitionReq := ppmsg.RequestMsg.RequestType == message.PartitionReq
 
@@ -66,20 +66,20 @@ func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) HandleinPrePrepare(ppmsg *me
 	return true
 }
 
-// the operation in prepare, and in pbft + tx relaying, this function does not need to do any.
+// 在prepare中的操作，以及在pbft + tx中继中，这个函数不需要做任何事情.
 func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) HandleinPrepare(pmsg *message.Prepare) bool {
 	fmt.Println("No operations are performed in Extra handle mod")
 	return true
 }
 
-// the operation in commit.
+// commit 中的操作。如果是分区请求，则执行分区操作；如果是块请求，则执行块操作
 func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) HandleinCommit(cmsg *message.Commit) bool {
 	r := cphm.pbftNode.requestPool[string(cmsg.Digest)]
 	// requestType ...
 	if r.RequestType == message.PartitionReq {
 		// if a partition Requst ...
 		atm := message.DecodeAccountTransferMsg(r.Msg.Content)
-		cphm.accountTransfer_do(atm)
+		cphm.accountTransfer_do(atm) //调用accountTransfer_do方法，执行账户转移操作
 		return true
 	}
 	// if a block request ...
@@ -89,7 +89,7 @@ func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) HandleinCommit(cmsg *message
 	cphm.pbftNode.pl.Plog.Printf("S%dN%d : added the block %d... \n", cphm.pbftNode.ShardID, cphm.pbftNode.NodeID, block.Header.Number)
 	cphm.pbftNode.CurChain.PrintBlockChain()
 
-	// now try to relay txs to other shards (for main nodes)
+	// 现在尝试将 txs 中继到其他分片（对于主节点）
 	if cphm.pbftNode.NodeID == cphm.pbftNode.view {
 		cphm.pbftNode.pl.Plog.Printf("S%dN%d : main node is trying to send broker confirm txs at height = %d \n", cphm.pbftNode.ShardID, cphm.pbftNode.NodeID, block.Header.Number)
 		// generate brokertxs and collect txs excuted
@@ -183,9 +183,9 @@ func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) HandleReqestforOldSeq(*messa
 	return true
 }
 
-// the operation for sequential requests
+// 顺序请求的操作
 func (cphm *CLPAPbftInsideExtraHandleMod_forBroker) HandleforSequentialRequest(som *message.SendOldMessage) bool {
-	if int(som.SeqEndHeight-som.SeqStartHeight+1) != len(som.OldRequest) {
+	if int(som.SeqEndHeight-som.SeqStartHeight+1) != len(som.OldRequest) { //如果顺序请求的结束高度减去开始高度加1不等于顺序请求的长度，则打印错误信息
 		cphm.pbftNode.pl.Plog.Printf("S%dN%d : the SendOldMessage message is not enough\n", cphm.pbftNode.ShardID, cphm.pbftNode.NodeID)
 	} else { // add the block into the node pbft blockchain
 		for height := som.SeqStartHeight; height <= som.SeqEndHeight; height++ {

@@ -7,9 +7,9 @@ import (
 	"log"
 )
 
-// This module used in the blockChain using transaction relaying mechanism.
-// "CLPA" means that the blockChain use Account State Transfer protocal by clpa.
-type CLPARelayOutsideModule struct {
+// 该模块在区块链中使用，使用交易中继机制。
+// “CLPA”表示区块链使用 clpa 的账户状态传输协议。
+type CLPARelayOutsideModule struct { //CLPARelayOutsideModule结构包含用于PBFT共识外部的各种配置参数
 	cdm      *dataSupport.Data_supportCLPA
 	pbftNode *PbftConsensusNode
 }
@@ -58,8 +58,8 @@ func (crom *CLPARelayOutsideModule) handleInjectTx(content []byte) {
 	crom.pbftNode.pl.Plog.Printf("S%dN%d : has handled injected txs msg, txs: %d \n", crom.pbftNode.ShardID, crom.pbftNode.NodeID, len(it.Txs))
 }
 
-// the leader received the partition message from listener/decider,
-// it init the local variant and send the accout message to other leaders.
+// 领导者收到来自监听器/决策者的分区消息，
+// 它初始化本地变量并将帐户消息发送给其他领导者。
 func (crom *CLPARelayOutsideModule) handlePartitionMsg(content []byte) {
 	pm := new(message.PartitionModifiedMap)
 	err := json.Unmarshal(content, pm)
@@ -71,7 +71,7 @@ func (crom *CLPARelayOutsideModule) handlePartitionMsg(content []byte) {
 	crom.cdm.PartitionOn = true
 }
 
-// wait for other shards' last rounds are over
+// 等待其他分片的最后一轮结束
 func (crom *CLPARelayOutsideModule) handlePartitionReady(content []byte) {
 	pr := new(message.PartitionReady)
 	err := json.Unmarshal(content, pr)
@@ -89,7 +89,7 @@ func (crom *CLPARelayOutsideModule) handlePartitionReady(content []byte) {
 	crom.pbftNode.pl.Plog.Printf("ready message from shard %d, seqid is %d\n", pr.FromShard, pr.NowSeqID)
 }
 
-// when the message from other shard arriving, it should be added into the message pool
+// 当其他分片的消息到达时，应将其添加到消息池中
 func (crom *CLPARelayOutsideModule) handleAccountStateAndTxMsg(content []byte) {
 	at := new(message.AccountStateAndTx)
 	err := json.Unmarshal(content, at)
